@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "184224589671",
+    "project_id": "career-path-recommendati-883c6",
+    "storage_bucket": "career-path-recommendati-883c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184224589671:android:30c25e76756510762bb1c2",
+        "android_client_info": {
+          "package_name": "com.example.career_path_recommendation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLw7coixArwgGxiFwHXdtglzgdlkKkfbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
