@@ -10,9 +10,14 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  final bool isChecked = false;
+  bool isChecked = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final padding = size.width * 0.04;
+    final buttonFontSize = size.width * 0.045;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xff0E2515),
@@ -36,14 +41,6 @@ class _SigninState extends State<Signin> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image(image: AssetImage(AppImages.logo1), width: 150),
-                        Text(
-                          "Sign in to your Account",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
                         SizedBox(height: 10),
                         Row(
                           children: [
@@ -68,6 +65,15 @@ class _SigninState extends State<Signin> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Sign In To Your Account",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.width * 0.10,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -86,15 +92,15 @@ class _SigninState extends State<Signin> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomInput(
+                        controller: emailController,
                         label: "Email/Username",
-                        placeholder: "Type you email or username",
-                        icon: Icon(Icons.email),
+                        placeholder: "Type your email or username",
                       ),
                       SizedBox(height: 15),
                       CustomInput(
+                        controller: passwordController,
                         label: "Password",
                         placeholder: "Type your password",
-                        icon: Icon(Icons.email),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,11 +108,29 @@ class _SigninState extends State<Signin> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Checkbox(value: isChecked, onChanged: null),
+                              Checkbox(
+                                value: isChecked,
+                                onChanged: (val) {
+                                  setState(() {
+                                    isChecked = val ?? false;
+                                  });
+                                },
+                              ),
                               Text("Remember me"),
                             ],
                           ),
-                          Text("Forget Password?"),
+                          GestureDetector(
+                            onTap: () {
+                              // TODO: Implement forget password navigation
+                            },
+                            child: Text(
+                              "Forget Password?",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       Padding(
@@ -144,44 +168,70 @@ class _SigninState extends State<Signin> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Image(image: AssetImage(AppImages.facebook)),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 40,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Google",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: padding * 0.9,
                                   ),
+                                  side: BorderSide(width: 1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.google,
+                                      width: padding * 2,
+                                      height: padding * 2,
+                                    ),
+                                    SizedBox(width: padding * 0.7),
+                                    Text(
+                                      "Google",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: buttonFontSize,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 40,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Facebook",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                            SizedBox(width: padding),
+                            Expanded(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: padding * 0.9,
                                   ),
+                                  side: BorderSide(width: 1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.facebook,
+                                      width: padding * 2,
+                                      height: padding * 2,
+                                    ),
+                                    SizedBox(width: padding * 0.7),
+                                    Text(
+                                      "Facebook",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: buttonFontSize,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

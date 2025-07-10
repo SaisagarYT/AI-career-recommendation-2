@@ -9,6 +9,6 @@ class AppImages {
   static const String reading = "lib/assets/images/reading.jpg";
   static const String watching = "lib/assets/images/watching.jpg";
   static const String stars = "lib/assets/images/stars.png";
-  // static const String google = "lib/assets/images/google.jpg";
-  // static const String facebook = "lib/assets/images/facebook.png";
+  static const String google = "lib/assets/images/google.jpg";
+  static const String facebook = "lib/assets/images/facebook.png";
 }

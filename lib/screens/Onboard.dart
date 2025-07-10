@@ -2,6 +2,7 @@ import 'package:career_path_recommendation/customWidgets/Nextbutton.dart';
 import 'package:career_path_recommendation/customWidgets/PreButton.dart';
 import 'package:flutter/material.dart';
 import '../../assets/images.dart';
+
 class Onboard extends StatefulWidget {
   const Onboard({super.key});
 
@@ -206,7 +207,12 @@ class _OnboardState extends State<Onboard> {
             ),
           ),
           SizedBox(height: 15),
-          Prebutton(bgcolor: Color(0xff2c7743), text: "Get Started"),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/started');
+            },
+            child: Prebutton(bgcolor: Color(0xff2c7743), text: "Get Started"),
+          ),
           SizedBox(height: 10),
           GestureDetector(
             onTap: () {

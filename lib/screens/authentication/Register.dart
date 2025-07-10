@@ -1,6 +1,7 @@
 import 'package:career_path_recommendation/assets/images.dart';
 import 'package:career_path_recommendation/customWidgets/CustomInput.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -10,13 +11,75 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  String selectedCountryCode = '+1';
+  String selectedCountryFlag = '🇺🇸';
+  final List<Map<String, String>> countryCodes = [
+    {'code': '+1', 'flag': '🇺🇸'},
+    {'code': '+91', 'flag': '🇮🇳'},
+    {'code': '+44', 'flag': '🇬🇧'},
+    {'code': '+61', 'flag': '🇦🇺'},
+  ];
+
+  final formKey = GlobalKey<FormState>();
+
+  Future<void> registration() async {
+    try {
+      final email = emailController.text.trim();
+      final firstName = firstNameController.text.trim();
+      final lastName = lastNameController.text.trim();
+      final password = passwordController.text.trim();
+      final fullName = '$firstName $lastName';
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      await userCredential.user!.updateDisplayName(fullName);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Registered Successfully!")));
+
+      Navigator.pushReplacementNamed(context, '/homepage');
+    } on FirebaseException catch (err) {
+      if (err.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Password provided is too Weak",
+              style: TextStyle(fontSize: 18),
+            ),
+            backgroundColor: Colors.deepOrangeAccent,
+          ),
+        );
+      } else if (err.code == "email-already-in-use") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Account already exists.",
+              style: TextStyle(fontSize: 18),
+            ),
+            backgroundColor: Colors.deepOrangeAccent,
+          ),
+        );
+      }
+    }
+  }
+
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final padding = size.width * 0.04;
+    final buttonFontSize = size.width * 0.045;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xff0E2515),
-      body: SingleChildScrollView(
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             SizedBox(
@@ -60,127 +123,281 @@ class _RegisterState extends State<Register> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Register",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.width * 0.10,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Container(
-                width: double.maxFinite,
-                height: MediaQuery.of(context).size.height * 0.7,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomInput(
-                        label: "Email/Username",
-                        placeholder: "Type you email or username",
-                        icon: Icon(Icons.email),
-                      ),
-                      SizedBox(height: 15),
-                      CustomInput(
-                        label: "Password",
-                        placeholder: "Type your password",
-                        icon: Icon(Icons.email),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Checkbox(value: isChecked, onChanged: null),
-                              Text("Remember me"),
-                            ],
-                          ),
-                          Text("Forget Password?"),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25, bottom: 20),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Color(0xff2c7743),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(width: 100, height: 2, color: Colors.grey),
-                          Text(
-                            "Or login with",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          Container(width: 100, height: 2, color: Colors.grey),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: Container(
+                      width: double.maxFinite,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Image(image: AssetImage(AppImages.facebook)),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomInput(
+                                    controller: firstNameController,
+                                    label: "First Name",
+                                    placeholder: "Type your first name",
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Expanded(
+                                  child: CustomInput(
+                                    controller: lastNameController,
+                                    label: "Last Name",
+                                    placeholder: "Type your last name",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            CustomInput(
+                              controller: emailController,
+                              label: "Email",
+                              placeholder: "Type your Email",
+                            ),
+                            SizedBox(height: 15),
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 40,
-                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                border: Border.all(width: 1),
-                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(4),
+                                boxShadow: [],
                               ),
-                              child: Center(
-                                child: Text(
-                                  "Google",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        value: selectedCountryCode,
+                                        items:
+                                            countryCodes.map((country) {
+                                              return DropdownMenuItem<String>(
+                                                value: country['code'],
+                                                child: Row(
+                                                  children: [
+                                                    Text(country['flag'] ?? ''),
+                                                    SizedBox(width: 6),
+                                                    Text(country['code'] ?? ''),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList(),
+                                        onChanged: (val) {
+                                          setState(() {
+                                            selectedCountryCode = val!;
+                                            selectedCountryFlag =
+                                                countryCodes.firstWhere(
+                                                  (c) => c['code'] == val,
+                                                )['flag']!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 1,
+                                    height: 40,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: phoneController,
+                                      keyboardType: TextInputType.phone,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 16,
+                                        ),
+                                        hintText: 'Phone Number',
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        filled: false,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            CustomInput(
+                              controller: passwordController,
+                              label: "Password",
+                              placeholder: "Type your password",
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Checkbox(
+                                  value: isChecked,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      isChecked = val ?? false;
+                                    });
+                                  },
+                                ),
+                                Text("Remember me"),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                if (formKey.currentState!.validate()) {
+                                  await registration();
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 25,
+                                  bottom: 20,
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff2c7743),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Sign up",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 40,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Facebook",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 2,
+                                  color: Colors.grey,
                                 ),
+                                Text(
+                                  "Or login with",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 2,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            SizedBox(
+                              width: double.maxFinite,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: padding * 0.9,
+                                        ),
+                                        side: BorderSide(width: 1),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            AppImages.google,
+                                            width: padding * 2,
+                                            height: padding * 2,
+                                          ),
+                                          SizedBox(width: padding * 0.7),
+                                          Text(
+                                            "Google",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: buttonFontSize,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: padding),
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: padding * 0.9,
+                                        ),
+                                        side: BorderSide(width: 1),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            AppImages.facebook,
+                                            width: padding * 2,
+                                            height: padding * 2,
+                                          ),
+                                          SizedBox(width: padding * 0.7),
+                                          Text(
+                                            "Facebook",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: buttonFontSize,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
