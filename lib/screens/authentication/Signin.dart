@@ -133,19 +133,26 @@ class _SigninState extends State<Signin> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25, bottom: 20),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Color(0xff2c7743),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
+                      GestureDetector(
+                        onTap:
+                            () => Navigator.pushReplacementNamed(
+                              context,
+                              '/homepage',
+                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 25, bottom: 20),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Color(0xff2c7743),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Login",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),

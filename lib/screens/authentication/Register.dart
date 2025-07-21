@@ -1,7 +1,6 @@
 import 'package:career_path_recommendation/assets/images.dart';
 import 'package:career_path_recommendation/customWidgets/CustomInput.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -25,50 +24,6 @@ class _RegisterState extends State<Register> {
     {'code': '+61', 'flag': '🇦🇺'},
   ];
 
-  final formKey = GlobalKey<FormState>();
-
-  Future<void> registration() async {
-    try {
-      final email = emailController.text.trim();
-      final firstName = firstNameController.text.trim();
-      final lastName = lastNameController.text.trim();
-      final password = passwordController.text.trim();
-      final fullName = '$firstName $lastName';
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      await userCredential.user!.updateDisplayName(fullName);
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Registered Successfully!")));
-
-      Navigator.pushReplacementNamed(context, '/homepage');
-    } on FirebaseException catch (err) {
-      if (err.code == 'weak-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Password provided is too Weak",
-              style: TextStyle(fontSize: 18),
-            ),
-            backgroundColor: Colors.deepOrangeAccent,
-          ),
-        );
-      } else if (err.code == "email-already-in-use") {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Account already exists.",
-              style: TextStyle(fontSize: 18),
-            ),
-            backgroundColor: Colors.deepOrangeAccent,
-          ),
-        );
-      }
-    }
-  }
-
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
@@ -84,7 +39,7 @@ class _RegisterState extends State<Register> {
           children: [
             SizedBox(
               width: double.maxFinite,
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.35,
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -143,7 +98,6 @@ class _RegisterState extends State<Register> {
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
                   child: Form(
-                    key: formKey,
                     child: Container(
                       width: double.maxFinite,
                       color: Colors.white,
@@ -265,11 +219,7 @@ class _RegisterState extends State<Register> {
                               ],
                             ),
                             GestureDetector(
-                              onTap: () async {
-                                if (formKey.currentState!.validate()) {
-                                  await registration();
-                                }
-                              },
+                              onTap: () async {},
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                   top: 25,
