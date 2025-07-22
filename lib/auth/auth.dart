@@ -1,27 +1,31 @@
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// class Auth {
-//   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+signup(String email, String password) async {
+  try {
+    final credetials = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    print(credetials.credential!.providerId);
+  } on FirebaseAuthException catch (err) {
+    if (err.code == 'weak-password') {
+      print("The provided password is too weak");
+    } else if (err.code == 'email-already-in-use') {
+      print("The email is already in use");
+    }
+  }
+}
 
-//   User? get currentUser => _firebaseAuth.currentUser;
-
-//   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-
-//   Future<void> signInWithEmailAndPassword(String email, String password) async {
-//     await _firebaseAuth.signInWithEmailAndPassword(
-//       email: email,
-//       password: password,
-//     );
-//   }
-
-//   Future<void> createUserWithEmailAndPassword({required String email, required String password}) async {
-//     await _firebaseAuth.createUserWithEmailAndPassword(
-//       email: email,
-//       password: password,
-//     );
-//   }
-
-//   Future<void> signOut() async {
-//     await _firebaseAuth.signOut();
-//   }
-// }
+signin(String email, String password) async {
+  try {
+    final credetials = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    print(credetials.credential!.providerId);
+  } on FirebaseAuthException catch (err) {
+    if (err.code == 'wrong-password') {
+      print("The password is wrong!");
+    } else if (err.code == 'user-not-found') {
+      print("The user not found!");
+    }
+  }
+}

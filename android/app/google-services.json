@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "48481917454",
+    "project_id": "cpr-project-aa05d",
+    "storage_bucket": "cpr-project-aa05d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48481917454:android:827cb17c3e58542018fa5f",
+        "android_client_info": {
+          "package_name": "com.example.career_path_recommendation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl3lNJBLB-f8RiupteToJXdpyEcK8AOMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

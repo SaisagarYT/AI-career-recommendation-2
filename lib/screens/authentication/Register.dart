@@ -179,7 +179,12 @@ class _RegisterState extends State<Register> {
                                     color: Colors.grey.shade300,
                                   ),
                                   Expanded(
-                                    child: TextField(
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value.toString().length < 10) {
+                                          return "Enter valid number!";
+                                        }
+                                      },
                                       controller: phoneController,
                                       keyboardType: TextInputType.phone,
                                       decoration: InputDecoration(
