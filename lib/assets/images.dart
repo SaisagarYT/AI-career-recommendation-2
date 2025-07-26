@@ -11,4 +11,5 @@ class AppImages {
   static const String stars = "lib/assets/images/stars.png";
   static const String google = "lib/assets/images/google.jpg";
   static const String facebook = "lib/assets/images/facebook.png";
+  static const String datascience = "lib/assets/images/datascience.jpg";
 }

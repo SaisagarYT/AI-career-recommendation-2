@@ -184,6 +184,7 @@ class _RegisterState extends State<Register> {
                                         if (value.toString().length < 10) {
                                           return "Enter valid number!";
                                         }
+                                        return null;
                                       },
                                       controller: phoneController,
                                       keyboardType: TextInputType.phone,
